@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { optionSetters } from '../utils/others.es';
+import { optionSetters, jsonToStringPaths } from '../utils/others.es';
 // import { objectIsEmpty } from '../utils/extendjs.es';
 import { getoption, optionByKeyPath } from '../option/option.es';
 
@@ -20,7 +20,17 @@ import { getoption, optionByKeyPath } from '../option/option.es';
 
 
 const OPTIONS = {
-    autoCenter: true
+    autoCenter: true,
+    chart: {
+        circleR: 5,
+        itemStyle: {
+            normal: {
+                textStyle: {
+                    'font-size': '20px'
+                }
+            }
+        }
+    }
 };
 
 /**
@@ -62,8 +72,30 @@ export function optionsByKeyPath(options, keyPath, nextPaths) {
         case 'autoCenter':
             options.autoCenter = !!options.autoCenter;
             break;
+        case 'chart.circleR':
+            const circleR = options.chart.circleR;
+            options.chart.circleR = _.isNumber(circleR) && circleR >= 1 ? circleR : OPTIONS.chart.circleR;
+            break;
+        case 'chart.itemStyle.normal.textStyle.font-size':
+            const fontSize = options.chart.itemStyle.normal.textStyle['font-size'];
+            options.chart.itemStyle.normal.textStyle['font-size'] = fontSize || OPTIONS.chart.itemStyle.normal.textStyle['font-size'];
+            break;
         default:
+            // 先在 Modular 中验证/填充
             options = optionByKeyPath(options, keyPath, nextPaths);
+
+            // 再在 User Interface 中进行验证/填充；User Interface 的优先级大于 Modular
+            // 只处理对象类型，因为当前 case 中定义有所有具体的路径
+            // 这里是按照默认的 OPTIONS 取 key，这样才能取到一份完整的
+            const pathValue = _.get(OPTIONS, keyPath);
+            if (_.isPlainObject(pathValue)) {
+                // 获取到叶子节点的完整 keyPath，并再次进行 case
+                const paths = jsonToStringPaths(pathValue, [keyPath]);
+                paths.forEach((path) => {
+                    optionsByKeyPath(options, path);
+                });
+            }
+
     }
 
     // must return the params: options; good good thinking thinking!!

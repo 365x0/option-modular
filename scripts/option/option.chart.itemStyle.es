@@ -85,7 +85,7 @@ export function optionByKeyPath(itemStyle, keyPath, nextPaths) {
             const path2 = splitPath[2].substring(1);
             itemStyle[path1][path2] = objectIsEmpty(itemStyle[path1][path2]) || objectIsEmpty(nextPaths) ?
                 NextCommonInterface[`get${path2.toLowerCase()}`](itemStyle[path1][path2]) :
-                optionSetters(itemStyle[path1][path2], NextCommonInterface(`${path2}ByKeyPath`), { keyPaths: nextPaths });
+                optionSetters(itemStyle[path1][path2], NextCommonInterface[`${path2}ByKeyPath`], { keyPaths: nextPaths });
             break;
         // 下层入口通用跳转、转发
         default:

@@ -5,6 +5,7 @@ import { getoptions, optionsByKeyPath } from './scripts/components/options.es';
 let options = getoptions({
     autoRender: false,
     chart: {
+        circleR: 10,
         zIndex: 1,
         itemStyle: {
             haha: 'haha',
@@ -33,7 +34,11 @@ console.log(_.cloneDeep(options));
 const userOptions = {
     autoRender: true,
     chart: {
-        zIndex: 2
+        circleR: 'abc',
+        zIndex: 2,
+        itemStyle: {
+            hehe: 'hehe'
+        }
     },
     textStyle: null
 };

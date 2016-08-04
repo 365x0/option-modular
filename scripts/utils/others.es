@@ -21,6 +21,23 @@ export function stringPathToJson(keyPaths, lastValue = undefined) {
     return jsonPath;
 }
 
+export function jsonToStringPaths(jsonPath, prePath = []) {
+    let paths = [];
+
+    function toLeaf(level, prePath) {
+        if (!_.isPlainObject(level)) {
+            return paths.push(prePath.join('.'));
+        }
+
+        for (var pathKey in level) {if (level.hasOwnProperty(pathKey)) {
+            toLeaf(level[pathKey], prePath.concat([pathKey]));
+        }}
+    }
+    toLeaf(jsonPath, prePath);
+
+    return paths;
+}
+
 export function optionSetters(option, optionByKeyPath, {
     userOption = {},
     keyPaths = {},

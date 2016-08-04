@@ -72,7 +72,7 @@ export function optionByKeyPath(option, keyPath, nextPaths) {
         case 'chart': case 'textStyle':
             option[keyPath] = objectIsEmpty(option[keyPath]) || objectIsEmpty(nextPaths) ?
                 NextCommonInterface[`get${keyPath.toLowerCase()}`](option[keyPath]) :
-                optionSetters(option[keyPath], NextCommonInterface(`${keyPath}ByKeyPath`), { keyPaths: nextPaths });
+                optionSetters(option[keyPath], NextCommonInterface[`${keyPath}ByKeyPath`], { keyPaths: nextPaths });
             break;
         // 下层入口通用跳转、转发
         default:
