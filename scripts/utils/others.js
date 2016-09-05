@@ -3,7 +3,7 @@ import _ from 'lodash';
 import {
     objectIsEmpty,
     jsonOnlyKeys
-} from './extendjs.es';
+} from './extendjs.js';
 
 
 export function stringPathToJson(keyPaths, lastValue = undefined) {
@@ -46,6 +46,10 @@ export function optionSetters(option, optionByKeyPath, {
 
     if (objectIsEmpty(keyPaths)) {
         keyPaths = jsonOnlyKeys(objectIsEmpty(userOption) ? option : userOption);
+
+        if (objectIsEmpty(keyPaths)) {
+            return option;
+        }
     }
 
     for (const optionKey in keyPaths) {if (keyPaths.hasOwnProperty(optionKey)) {

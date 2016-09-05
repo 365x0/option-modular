@@ -1,13 +1,13 @@
 import _ from 'lodash';
 
-import { optionSetters, stringPathToJson } from '../utils/others.es';
-import { objectIsEmpty } from '../utils/extendjs.es';
-import { getchart, optionByKeyPath as chartByKeyPath } from './option.chart.es';
-import { gettextstyle, optionByKeyPath as textStyleByKeyPath } from './packages/textStyle.es';
+import { optionSetters, stringPathToJson } from '../utils/others.js';
+import { objectIsEmpty } from '../utils/extendjs.js';
+import { getobject1a, optionByKeyPath as object1AByKeyPath } from './option.object1A.js';
+import { getobjectcommon1a, optionByKeyPath as objectCommon1AByKeyPath } from './packages/objectCommon1A.js';
 
 const NextCommonInterface = {
-    getchart, chartByKeyPath,
-    gettextstyle, textStyleByKeyPath
+    getobject1a, object1AByKeyPath,
+    getobjectcommon1a, objectCommon1AByKeyPath
 };
 
 /**
@@ -25,9 +25,10 @@ const NextCommonInterface = {
 
 
 const OPTION = {
-    autoRender: true,
-    chart: null,
-    textStyle: null
+    boolean1A: true,
+    number1A: 100,
+    object1A: null,
+    objectCommon1A: null
 };
 
 /**
@@ -65,21 +66,28 @@ export function getoption(userOption = {}) {
  */
 export function optionByKeyPath(option, keyPath, nextPaths) {
     switch (keyPath) {
-        case 'autoRender':
-            option.autoRender = !!option.autoRender;
+        case 'boolean1A':
+            option.boolean1A = !!option.boolean1A;
             break;
-        // 下层入口通用定义
-        case 'chart': case 'textStyle':
-            option[keyPath] = objectIsEmpty(option[keyPath]) || objectIsEmpty(nextPaths) ?
-                NextCommonInterface[`get${keyPath.toLowerCase()}`](option[keyPath]) :
-                optionSetters(option[keyPath], NextCommonInterface[`${keyPath}ByKeyPath`], { keyPaths: nextPaths });
+        case 'number1A':
+            option.number1A = _.isNumber(option.number1A) && option.number1A > 100 ? option.number1A : OPTION.number1A;
             break;
-        // 下层入口通用跳转、转发
+        // 下层入口通用定义分发；可以根据 nextPaths 和 value 判断 下层的入口，加速配置的精确验证
+        case 'object1A': case 'objectCommon1A':
+            const nextOption = option[keyPath];
+            option[keyPath] = objectIsEmpty(nextOption) || objectIsEmpty(nextPaths) ?
+                // 走下级的 init 入口
+                NextCommonInterface[`get${keyPath.toLowerCase()}`](nextOption) :
+                // 走下级的 case 入口
+                optionSetters(nextOption, NextCommonInterface[`${keyPath}ByKeyPath`], { keyPaths: nextPaths });
+            break;
+        // 下层入口通用跳转、转发；
         default:
             nextPaths = stringPathToJson(keyPath, nextPaths);
-            if (nextPaths.$length > 1) {
+            if (nextPaths.$depth > 1) {
                 // 当前层级中找不到匹配的 case，所以将该多级路径直接缩减为一级路径进行重新验证
-                 option = optionByKeyPath(option, nextPaths.$first, nextPaths[nextPaths.$first]);
+                // 直接缩减为一级路径的原因是：在 Modular 中，当前层不处理任何下层对象型配置，只做分发功能
+                option = optionByKeyPath(option, nextPaths.$first, nextPaths[nextPaths.$first]);
             } else {
                 // 如果 keyPath 为一级路径，则该键名是用户臆造的，非内部键名，所以直接忽略
             }

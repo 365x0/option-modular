@@ -5,7 +5,7 @@ module.exports = {
     entry: [
         'webpack/hot/dev-server',
         'webpack-dev-server/client?http://localhost:8080',
-        './index.es'
+        './index.js'
     ],
     // entry: './src/index.js',
     output: {
@@ -23,7 +23,7 @@ module.exports = {
     module:{
         loaders:[
             {
-                test:/\.es$/,
+                test:/\.js$/,
                 loader: 'babel',
                 exclude:/node_modules|picker\.data\.js|picker\.js/
             },

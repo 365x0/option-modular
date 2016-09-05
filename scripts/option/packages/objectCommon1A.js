@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
-import { optionSetters } from '../../utils/others.es';
-import { objectIsEmpty } from '../../utils/extendjs.es';
+import { optionSetters } from '../../utils/others.js';
+import { objectIsEmpty } from '../../utils/extendjs.js';
 
 
 /**
@@ -18,7 +18,7 @@ import { objectIsEmpty } from '../../utils/extendjs.es';
  */
 
 
-const TEXT_STYLE = {
+const OBJECTCOMMON1A = {
     'font-size': '12px',
     'font-family': 'sans-serif',
     'font-weight': 'normal',
@@ -33,20 +33,20 @@ const TEXT_STYLE = {
 
 
 /**
- * 以当前层级为基准，获取一份完整的 textStyle，支持合并用户 textStyle 到返回值中；
- * 同事，会自动递归向下层验证、填充以保证整个 textStyle 的完整、正确性；
+ * 以当前层级为基准，获取一份完整的 objectCommon1A，支持合并用户 objectCommon1A 到返回值中；
+ * 同事，会自动递归向下层验证、填充以保证整个 objectCommon1A 的完整、正确性；
  *
- * @param  {[type]} textStyle   个性化的一些 textStyle；
+ * @param  {[type]} objectCommon1A   个性化的一些 objectCommon1A；
  * @return {[type]}             一份完整的 chart，包括用户已个性化定制的（且已 check 通过了的）；
  */
-export function gettextstyle(userTextStyle = {}) {
-    let textStyle = _.cloneDeep(TEXT_STYLE);
+export function getobjectcommon1a(userObjectCommon1A = {}) {
+    let objectCommon1A = _.cloneDeep(OBJECTCOMMON1A);
 
-    textStyle = _.merge(textStyle, userTextStyle);
+    objectCommon1A = _.merge(objectCommon1A, userObjectCommon1A);
 
-    textStyle = optionSetters(textStyle, optionByKeyPath, { mustNextAll: true });
+    objectCommon1A = optionSetters(objectCommon1A, optionByKeyPath, { mustNextAll: true });
 
-    return textStyle;
+    return objectCommon1A;
 }
 
 /**
@@ -58,14 +58,14 @@ export function gettextstyle(userTextStyle = {}) {
  *                            [检查]意味着需要验证，可以保证 option 的完整性、正确性
  * @return {[type]}           [description]
  */
-export function optionByKeyPath(textStyle, keyPath, nextPaths) {
+export function optionByKeyPath(objectCommon1A, keyPath, nextPaths) {
     switch (keyPath) {
         case 'color': case 'font-size': case 'font-weight': case 'font-family':
-            textStyle[keyPath] = textStyle[keyPath] || TEXT_STYLE[keyPath];
+            objectCommon1A[keyPath] = objectCommon1A[keyPath] || OBJECTCOMMON1A[keyPath];
             break;
         default:
     }
 
     // must return the params: options; good good thinking thinking!!
-    return textStyle;
+    return objectCommon1A;
 }

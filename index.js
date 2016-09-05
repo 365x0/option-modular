@@ -1,23 +1,22 @@
 import _ from 'lodash';
 
-import { getoptions, optionsByKeyPath } from './scripts/components/options.es';
+import { getoptions, optionsByKeyPath } from './scripts/components/options.js';
 
 let options = getoptions({
-    autoRender: false,
-    chart: {
-        circleR: 10,
-        zIndex: 1,
-        itemStyle: {
+    boolean1A: false,
+    object1A: {
+        number2A: 10,
+        number2B: 1,
+        object2A: {
             haha: 'haha',
             normal: {
-                color: '#333',
-                textStyle: {
+                objectCommon1A: {
                     'font-size': '16px'
                 }
             }
         }
     },
-    textStyle: {
+    objectCommon1A: {
         'font-size': '10px',
         'font-style': 'normal'
     }
@@ -32,15 +31,15 @@ console.log(_.cloneDeep(options));
 
 
 const userOptions = {
-    autoRender: true,
-    chart: {
-        circleR: 'abc',
-        zIndex: 2,
-        itemStyle: {
+    boolean1A: true,
+    object1A: {
+        number2A: 'abc',
+        number2B: 2,
+        object2A: {
             hehe: 'hehe'
         }
     },
-    textStyle: null
+    objectCommon1A: null
 };
 
 options = _.merge(options, userOptions);
